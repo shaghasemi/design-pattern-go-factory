@@ -1,4 +1,0 @@
-interface Button {
-	render();
-	onCLick();
-}
