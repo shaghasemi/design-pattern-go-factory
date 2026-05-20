@@ -1,0 +1,4 @@
+interface Button {
+	render();
+	onCLick();
+}
