@@ -1,9 +1,18 @@
 package main
 
-import "design-pattern-go-factory/factory"
+import "fmt"
 
 func main() {
-	dialog := factory.CreateDialog()
-	dialog.RenderWindow()
+	ak47, _ := getGun("ak47")
+	mukset, _ := getGun("musket")
 
+	printDetails(ak47)
+	printDetails(mukset)
+}
+
+func printDetails(g IGun) {
+	fmt.Printf("Gun: %s", g.getName())
+	fmt.Println()
+	fmt.Printf("Power: %d", g.getPower())
+	fmt.Println()
 }
