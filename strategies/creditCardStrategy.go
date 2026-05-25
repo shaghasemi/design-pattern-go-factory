@@ -3,7 +3,6 @@ package strategies
 import (
 	"bufio"
 	"fmt"
-	"os"
 )
 
 type PayByCreditCard struct {
@@ -11,10 +10,8 @@ type PayByCreditCard struct {
 	card   *CreditCard
 }
 
-func NewPayByCreditCard() *PayByCreditCard {
-	return &PayByCreditCard{
-		reader: bufio.NewReader(os.Stdin),
-	}
+func NewPayByCreditCard(reader *bufio.Reader) *PayByCreditCard {
+	return &PayByCreditCard{reader: reader}
 }
 func (p *PayByCreditCard) CollectPaymentDetails() {
 	fmt.Println("Enter the card number: ")

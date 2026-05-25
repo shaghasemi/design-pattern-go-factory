@@ -1,6 +1,6 @@
 package strategies
 
-type PaymentStrategy interface {
+type PayStrategy interface {
 	Pay(paymentAmount int) bool
 	CollectPaymentDetails()
 }

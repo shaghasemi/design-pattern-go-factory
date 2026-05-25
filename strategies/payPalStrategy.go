@@ -3,7 +3,6 @@ package strategies
 import (
 	"bufio"
 	"fmt"
-	"os"
 )
 
 var payPalDatabase = map[string]string{
@@ -18,10 +17,8 @@ type PayPalStrategy struct {
 	signedIn bool
 }
 
-func NewPayPalStrategy() *PayPalStrategy {
-	return &PayPalStrategy{
-		reader: bufio.NewReader(os.Stdin),
-	}
+func NewPayPalStrategy(reader *bufio.Reader) *PayPalStrategy {
+	return &PayPalStrategy{reader: reader}
 }
 
 func (p *PayPalStrategy) CollectPaymentDetails() {

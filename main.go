@@ -19,11 +19,10 @@ var priceOfProducts = map[int]int{
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
-	order := order.NewOrder()
-	var strategy strategies.PaymentStrategy
+	o := order.NewOrder()
 
-	for !order.IsClosed() {
-		var continueChoice string
+	for !o.IsClosed() {
+		// var continueChoice string
 
 		for {
 			fmt.Println("Please, select a product:")
@@ -32,16 +31,30 @@ func main() {
 			fmt.Println("3 - HDD")
 			fmt.Println("4 - Memory")
 
-			choice, _ := readInt(reader)
-			cost := priceOfProducts[choice]
+			choice, err := readInt(reader)
+			if err != nil {
+				fmt.Println("Invalid number, try again.")
+				continue
+			}
+
+			cost, ok := priceOfProducts[choice]
+
+			if !ok {
+				fmt.Println("Unknown product, try again.")
+				continue
+			}
 
 			fmt.Println("Count: ")
-			count, _ := readInt(reader)
+			count, err := readInt(reader)
+			if err != nil {
+				fmt.Println("Invalid count, try again.")
+				continue
+			}
 
-			order.SetTotalCost(cost * count)
+			o.SetTotalCost(cost * count)
 
 			fmt.Println("Do you wish to continue selecting products? Y/N: ")
-			continueChoice, _ = reader.ReadString('\n')
+			continueChoice, _ := reader.ReadString('\n')
 			continueChoice = strings.TrimSpace(continueChoice)
 
 			if !strings.EqualFold(continueChoice, "Y") {
@@ -49,7 +62,7 @@ func main() {
 			}
 		}
 
-		if strategy == nil {
+		if !o.HasStrategy() {
 			fmt.Println("Please, select a payment method:")
 			fmt.Println("1 - PalPay")
 			fmt.Println("2 - Credit Card")
@@ -57,26 +70,31 @@ func main() {
 			paymentMethod, _ := reader.ReadString('\n')
 			paymentMethod = strings.TrimSpace(paymentMethod)
 
-			if paymentMethod == "1" {
-				strategy = strategies.NewPayPalStrategy()
-			} else {
-				strategy = strategies.NewPayByCreditCard()
+			switch paymentMethod {
+			case "1":
+				o.SetPayStrategy(strategies.NewPayPalStrategy(reader))
+			case "2":
+				o.SetPayStrategy(strategies.NewPayPalStrategy(reader))
+			default:
+				fmt.Println("Invalid choice, try again.")
 			}
+
 		}
 
-		order.ProcessOrder(strategy)
+		o.ProcessOrder()
 
-		fmt.Printf("Pay %d units or Continue shopping? P/C: ", order.TotalCost())
+		fmt.Printf("Pay %d units or Continue shopping? P/C: ", o.TotalCost())
 		proceed, _ := reader.ReadString('\n')
 		proceed = strings.TrimSpace(proceed)
 
 		if strings.EqualFold(proceed, "P") {
-			if strategy.Pay(order.TotalCost()) {
+			if o.Pay() {
 				fmt.Println("Payment has been successful.")
 			} else {
 				fmt.Println("FAIL! Please, check your data.")
 			}
-			order.SetClosed()
+
+			o.SetClosed()
 		}
 	}
 
