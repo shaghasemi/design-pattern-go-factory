@@ -3,16 +3,33 @@ package main
 import "fmt"
 
 func main() {
-	ak47, _ := getGun("ak47")
-	mukset, _ := getGun("musket")
 
-	printDetails(ak47)
-	printDetails(mukset)
+	adidasFactory, _ := GetSportsFactory("adidas")
+	nikeFactory, _ := GetSportsFactory("nike")
+
+	nikeShoe := nikeFactory.makeShoe()
+	nikeShirt := nikeFactory.makeShirt()
+
+	adidasShoe := adidasFactory.makeShoe()
+	adidasShirt := adidasFactory.makeShirt()
+
+	printShoeDetails(nikeShoe)
+	printShirtDetails(nikeShirt)
+
+	printShoeDetails(adidasShoe)
+	printShirtDetails(adidasShirt)
 }
 
-func printDetails(g IGun) {
-	fmt.Printf("Gun: %s", g.getName())
+func printShoeDetails(s IShoe) {
+	fmt.Printf("Logo: %s", s.getLogo())
 	fmt.Println()
-	fmt.Printf("Power: %d", g.getPower())
+	fmt.Printf("Size: %d", s.getSize())
+	fmt.Println()
+}
+
+func printShirtDetails(s IShirt) {
+	fmt.Printf("Logo: %s", s.getLogo())
+	fmt.Println()
+	fmt.Printf("Size: %d", s.getSize())
 	fmt.Println()
 }
